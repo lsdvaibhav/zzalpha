@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+    <title>Dashboard</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/dashboard/">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <!-- Bootstrap core CSS -->
+<link href="{{ url_for('static',filename='assets/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+	  body {
+	  font-size: .675rem;
+		
+		max-width: 1400px;
+	  }
+	  td{
+	  white-space: nowrap; overflow: hidden; text-overflow:ellipsis;
+	  }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+	  .right {
+		  float:left;
+		  width:70%;
+		  padding:5px;
+		}
+		.left {
+		  float:left;
+		  width:30%;
+		  padding:5px;
+		}
+
+		@media only screen and (max-width:620px) {
+		  /* For mobile phones: */
+		  .left, .right {
+			width:100%;
+		  }
+		}
+    </style>
+    <!-- Custom styles for this template -->
+	
+	
+    <link href="{{ url_for('static',filename='css/dashboard.css') }}" rel="stylesheet">
+	
+  </head>
+  <body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Company name</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <ul class="navbar-nav px-3">
+    <li class="nav-item text-nowrap">
+      <a class="nav-link" href="/download">Download xlsx</a>
+    </li>
+  </ul>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="sidebar-sticky pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link " href="/home">
+              <span data-feather="home"></span>
+              Dashboard <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/reports">
+              <span data-feather="bar-chart-2"></span>
+              Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/integration">
+              <span data-feather="layers"></span>
+              Integrations
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+			<nav class="navbar navbar-light" style="background-color: #e3f2fd;width:100%;">
+				<h1 class="h2">Integrations</h1>
+				<div class="btn-toolbar mb-2 mb-md-0">
+				  <div class="btn-group mr-2">
+					<button type="button" onclick="showROW();" class="btn btn-sm btn-outline-secondary">ADD ROW</button>
+				  </div>
+				  <div class="custom-control custom-switch">
+				  <input type="checkbox" class="custom-control-input" id="customFilter" ><label class="custom-control-label" for="customFilter">Filter</label>
+				  </div>
+				</div>
+			
+			</nav>
+		</div>
+		<div class="row" id="mainDIV">
+			<div class="left col-md-3">
+				<div class="card">
+					<div class="card-header">
+					  <small class="text-muted">Introduction</small>
+					</div>
+					<div class="card-body">
+						<div class="form-group mb-3">
+							<input type="search"class="form-control form-control-sm" placeholder ="Agent Name"  id="agentSearchBox" required>
+						</div>
+						<div class="form-group mb-3">
+							<select class="form-control form-control-sm" id="Agents" required>
+
+							</select>
+						</div>
+						<div class="input-group mb-3">
+							<div class="custom-file">
+							<audio id="audio"src=""></audio>
+							<input type="file" class="custom-file-input " onclick="" id="file">
+							<label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col">
+								<input class="form-control form-control-sm" id="contactNO" type="text" placeholder="Contact Number">
+
+							</div>
+							<div class="col">
+								<input class="form-control form-control-sm" id="duration" type="text" placeholder="Call Duration">
+							</div>
+						</div>
+						<div class="form-group mb-3">
+							<input type="search"class="form-control form-control-sm" placeholder ="Disposition"  id="dispoSearchBox" required>
+						</div>
+						<div class="form-group mb-3">
+							<select class="form-control form-control-sm" id="Disposition" required>
+
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="right col-md-9">
+				<div class="card" id="card" >
+					<div class="card-header" >
+						<input type="checkbox" class="form-check-inpu" id="customSelectAll" checked>
+						<label class="form-check-label" for="customSelectAll">Select All</label>
+					</div>
+					<div class="row">
+						<div class="col" id="parameters" style="height: 325px; overflow-y: scroll;">
+							
+						</div>
+						<div class="col" >
+							<div class="card" id="card-Observation"style="height: 325px; overflow-y: scroll;"><div class="card-header">Observations</div>
+							</div>
+						</div>
+						<div class="col" >
+							<div class="card" id="card-AreaOI" style="height: 325px; overflow-y: scroll;overflow-x: scroll;"><div class="card-header">Area Of Improvement </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+						<div style="width: 100%; overflow-x: scroll;">
+							<table class="table table-bordered">
+								<tbody>
+									<tr id="copyrow">
+										
+									</tr>
+									<tr id="copyrow1">
+										
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					
+			<div class="form-row">
+				<div class="col">
+					<div class="card-header"><button type="button" class="btn btn-outline-dark btn-sm" >Observation</button></div>
+					<textarea class="form-control" rows="4" cols="200" id="OBStarget"></textarea>
+				</div>
+				<div class="col">
+					<div class="card-header"><button type="button" class="btn btn-outline-dark btn-sm" >AOI</button></div>
+					<textarea class="form-control" rows="4" cols="200" id="AOItarget"></textarea>
+				</div>
+			</div>
+		</div>
+	</main>
+  </div>
+</div>	
+		<script>
+		// Function to upload data
+		function AddRow(dataRow,vals,obs,aoi,url) {
+
+		 
+		  // Create a new FormData instance
+		  var data = new FormData();
+		  // Create a XMLHTTPRequest instance
+		  var request = new XMLHttpRequest();
+		  // Set the response type
+		  request.responseType = "json";
+		  // Disable the button during upload
+		  //.disabled = true;
+		  // Append the file to the FormData instance
+		  data.append("dataRow", dataRow);
+		  data.append("vals", vals);
+		  data.append("obs", obs);
+		  data.append("aoi", aoi);
+		  // request load handler (transfer complete)
+		  request.addEventListener("load", function (e) {
+
+			if (request.status == 200) {
+				var res = request.response;
+				console.log(res);
+				displayrow(res.dataRow,"copyrow");
+				
+			}
+			else {
+			  alert("error in response");
+			}
+		  });
+		  // request error handler
+		  request.addEventListener("error", function (e) {
+			reset();
+			alert("error in while uploading");
+		  });
+		  // Open and send the request
+		  request.open("post", url);
+		  request.send(data);
+		}
+		
+		function reset(){
+			
+			location.reload(true);
+		
+		}
+		
+		function showROW(){
+			
+			var selects = document.getElementsByName('para');
+			var vals =[]
+			for (var i=0, n=selects.length;i<n;i++) {vals.push(parseInt(selects[i].value));}
+			
+			today= new Date().getDate();
+			
+			
+			emp = document.getElementById("Agents").value.split(",");
+			contact = document.getElementById("contactNO").value.split(",");
+			duration = document.getElementById("duration").value;
+			auditor = "shashi";
+			disposition = document.getElementById("Disposition").value;
+			week ="";
+			if (today>0 && today<8){week = "Week 1"}
+			if (today>7 && today<15){week = "Week 2"}
+			if (today>14 && today<22){week = "Week 3"}
+			if (today>21 && today<29){week = "Week 4"}
+			if (today>28 && today<32){week = "Week 5"}
+			
+			obs = document.getElementById("OBStarget").value;
+			aoi = document.getElementById("AOItarget").value;
+			if (contact == "" || duration == "" || obs == "" || aoi == "" ) {
+				alert("check parameters properly");
+				reset();
+			}
+			else{
+				list =[];
+				list = list.concat(emp);
+				list = list.concat(contact);
+				list = list.concat(duration);
+				list = list.concat(auditor);
+				list = list.concat(disposition);
+				list = list.concat(disposition);
+				list = list.concat(week);
+				
+				list = list.concat(vals);
+				list.push(obs);
+				list.push(aoi);
+				
+				list1 =[];
+				list1 = list1.concat(emp);
+				list1 = list1.concat(contact);
+				list1 = list1.concat(duration);
+				list1 = list1.concat(auditor);
+				list1 = list1.concat(disposition);
+				list1 = list1.concat(disposition);
+				list1 = list1.concat(week);
+				
+			
+				
+				console.log(list);
+				displayrow(list,"copyrow");
+				var url= "/addRow";
+				console.log(vals);
+				AddRow(list1,vals,obs,aoi,url);
+				
+				
+			}
+		}
+		</script>
+		<script>
+		//search for agents details
+		agentSearchBox = document.querySelector("#agentSearchBox");
+		Agents = document.querySelector("#Agents");
+		var when = "keyup"; //You can change this to keydown, keypress or change
+
+		agentSearchBox.addEventListener("keyup", function (e) {
+			var text = e.target.value; 
+			var options = Agents.options; 
+			for (var i = 0; i < options.length; i++) {
+				var option = options[i]; 
+				var optionText = option.text; 
+				var lowerOptionText = optionText.toLowerCase();
+				var lowerText = text.toLowerCase(); 
+				var regex = new RegExp("^" + text, "i");
+				var match = optionText.match(regex); 
+				var contains = lowerOptionText.indexOf(lowerText) != -1;
+				if (match || contains) {
+					option.selected = true;
+					return;
+				}
+				agentSearchBox.selectedIndex = 0;
+			}
+		});
+
+		//search for disposition details
+		dispoSearchBox = document.querySelector("#dispoSearchBox");
+		dispo = document.querySelector("#Disposition");
+		var when = "keyup"; //You can change this to keydown, keypress or change
+
+		dispoSearchBox.addEventListener("keyup", function (e) {
+			var text = e.target.value; 
+			var options = dispo.options; 
+			for (var i = 0; i < options.length; i++) {
+				var option = options[i]; 
+				var optionText = option.text; 
+				var lowerOptionText = optionText.toLowerCase();
+				var lowerText = text.toLowerCase(); 
+				var regex = new RegExp("^" + text, "i");
+				var match = optionText.match(regex); 
+				var contains = lowerOptionText.indexOf(lowerText) != -1;
+				if (match || contains) {
+					option.selected = true;
+					return;
+				}
+				dispoSearchBox.selectedIndex = 0;
+			}
+		});
+		</script>
+		<script>
+			function observation(){
+				var checkboxes = document.getElementsByName('observ');
+				var obList = [];
+				for (var i=0, n=checkboxes.length;i<n;i++) 
+				{
+					if (checkboxes[i].checked) 
+					{ 
+						obList.push(checkboxes[i].value);
+					}
+				}
+				document.getElementById("OBStarget").innerHTML = obList;
+				
+			}
+			
+			function AreaOfImprove(){
+			
+			var checkboxes = document.getElementsByName('aoi');
+			var aoiList = [];
+			for (var i=0, n=checkboxes.length;i<n;i++) 
+			{
+				if (checkboxes[i].checked) 
+				{
+					aoiList.push(checkboxes[i].value);
+				}
+			}
+			
+			document.getElementById("AOItarget").innerHTML = aoiList;
+			
+			}
+		</script>
+		
+		<script>
+			var objectUrl;
+			var time = "";
+			$("#audio").on("canplaythrough", function(e){
+				var seconds = e.currentTarget.duration;
+				var duration = moment.duration(seconds, "seconds");
+				var hours = duration.hours();
+				if (hours > 0) { time = hours + ":" ; }
+				else {time = '0'}
+				time = time +":"+ duration.minutes() + ":" + duration.seconds();
+				$("#duration").val(time);
+				URL.revokeObjectURL(objectUrl);
+			});
+			$("#file").change(function(e){
+				var file = e.currentTarget.files[0];
+				var filename = file.name;
+				var filenameList =[];
+				filenameList = filename.split("_");
+				var contactNo = filenameList[0];
+				fl2 = filenameList[2].split("-");
+				var d = new Date();
+				const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+				  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+				];
+				var C_date = fl2[2] + "-" + (monthNames[parseInt(fl2[1])]) + "-" + fl2[0];
+				var T_date = d.getDate() + "-" + (monthNames[d.getMonth()]) + "-" + d.getFullYear();
+				objectUrl = URL.createObjectURL(file);
+				$("#audio").prop("src", objectUrl);
+				$("#contactNO").val([C_date,T_date,contactNo]);
+				
+			});
+			
+			document.getElementById('customSelectAll').onclick = function() {
+			  var checkboxes = document.getElementsByName('observ');
+			  for (var checkbox of checkboxes) {
+				checkbox.checked = this.checked;
+			  }
+			}
+			
+			//($(".customFilter").is(":checked"))?$("#mainDIV").show():$("#mainDIV").hide();
+		//$("#customFilter").click(function () {
+			//($(this).is(":checked"))?$("#mainDIV").show():$("#mainDIV").hide();
+		
+			//});
+			
+			
+				<!-- function setPlaySpeed() { vid.playbackRate = 2;} -->
+		</script>
+		<script>
+		
+			var para =[	["Greeting / Self & Company introduction done" ,3,"orange"],
+						["Active Listening And Avoid Interruption",3,"orange"],
+						["Polite And Professional approach throughout The Call(Voice modulation)",3,"orange"],
+						["Maintains customer pace/Rate of speech/ Grammar",3,"orange"],
+						["Acknowledge on customer response",3,"orange"],
+						["Personalization & rapport building with the customer.",3,"orange"],
+						["Use of proper Phonetics/ apology & sympathy observed on call",3,"orange"],
+						["Adhered To Hold And Transfer Procedures/ no dead air / unnecessary mute usage", 2,"orange"],
+						
+						["Effective Objection handling and Relevant rebuttals given",8,"purple"	],						
+						["Stated the Waiting period and Exclusions" ,5,"purple"	],
+						["Creates Interest and Urgency (Need Creation)",	8,"purple"]	,
+						["Pitching for 5 or 10 Lacks (Associate can reduce to 3 lack as per cx requirement)",4,"purple"],
+						["Effective Probing (Health) & Capturing correct  Customer details/ Nominee details, Maintain in Tracker",5,"purple"],
+						["Correct disposition tagged",5,"purple"],
+						["Follow up established with timelines",5,"purple"],
+						["Verification verbiage-Further assistance offered & appropriate closing done or Trail Closing ( 3 attempt)" ,3,"purple"],
+						
+						["Agent Informed the recording Statement as per IRDA (Disclaimer)",5,"green"],
+						["Confirmed the Right Party contact--'Am I speaking with Mr/Mrs._?' & taken permission to continue and language preference checked",3,"green"],
+						["Purpose of the call informed",5,"green"],
+						["Plan presentation, mis-selling or misguiding",10,"green"],
+						["Correctly premium calculation done & offer (Health Declaration/10% Loading charges)",10,"green"],
+						["Agent Rude on call/Sound Sarcastic on call/Call disconnection observed from associate end",1,"green"]
+
+					];
+			var para1 = `<table class="table table-responsive table-hover table-sm">`;
+			
+			for ( let i =0 ;i<para.length;i++){
+				
+				para1 += `
+				
+					<tr>
+						<td>
+							<select class="form-group form-group-sm" onchange="paraList();" name="para" id="${para[i][2]}">
+							  <option value="${para[i][1]}">${para[i][1]}</option>
+							  <option value="0">0</option>
+							  <option value="na">NA</option>
+							</select>
+						</td>
+						<td>${para[i][0]}</td>
+					</tr>
+				
+			`
+			}
+			para1 +=`</table>`
+			document.getElementById("parameters").innerHTML = para1;
+			
+			function paraList(){
+				var selects = document.getElementsByName('para');
+				var vals = [];
+					for (var i=0, n=selects.length;i<n;i++) 
+					{
+						vals.push(selects[i].value);
+						
+					}
+				console.log(vals);
+			}
+			
+			</script>
+			<script>
+			
+			emp = [
+					["15401",                              "Abhijeet Dilip Chavan",                    		          "Rohit Hari Patil",                             "24-Feb-20","0 to 30"],
+					["14196",                              "Budheshma Kanegaokar",                  	                  "Darshan Kale",                              "9-Sep-19","0 to 30"],
+					["13276",                              "David Charles Fernandes",                   	          "Rohit Hari Patil",       		              "16-Apr-19","0 to 30"],
+					["14537",                              "Pooja Durwas More",                            			  "Rohit Hari Patil",    		                   "7-Nov-19","0 to 30"],
+					["15443",                              "Pramila Manohar Hegde",                             	   "Darshan Gaikwad",                              "28-Feb-20","0 to 30"],
+					["15050",                              "Puja Rana",                             			   		 "Darshan Kale",                              "21-Jan-20","0 to 30"],
+					["15470",                              "Rupa Birajdar",                          		    "Prajyot Prakash Pawar",                              "28-Feb-20","0 to 30"],
+					["15577",                              "Sandhya Rajnarayan Singh",                              "Rohit Hari Patil",                              "16-Mar-20","0 to 30"],
+					["15501",                              "Sharif Shahnawaz Farooque",                              "Darshan Gaikwad",                              "3-Mar-20","0 to 30"],
+					["15499",                              "Sunny Nimba Borse",                              "Darshan Gaikwad",                              "3-Mar-20","0 to 30"],
+					["15394",                              "Allauddin Mahmed Mhaldar",                              "Darshan Kale",                              "6-Jul-20","0 to 30"],
+					["15477",                              "Mahesh Ghumare",                              "Darshan Gaikwad",                              "28-Feb-20","0 to 30"],
+					["12872",                              "Lajar Mallappa Bhingamal",                              "Rohit Hari Patil",						"19-Jan-19","0 to 30"],
+					["15466",                              "Nooralam Khan",                              "Darshan Gaikwad",                              "28-Feb-20","0 to 30"],
+					["15478",                              "Harish Rajkumar Khatri",                              "Darshan Gaikwad",                              "6-Jul-20","0 to 30"],
+					["14534",                              "Marya Khane",                              "Darshan Kale",                              "7-Nov-19","0 to 30"],
+					["12805",                              "Ravindra Gorade",                              "Darshan Kale",                              "22-Dec-18","0 to 30"],
+					["15322",                              "Akash Kamlakar Sidram",                              "Rohit Hari Patil",                              "17-Feb-20","0 to 30"],
+					["13927",                              "Vrutik Sambhaji Pawar",                              "Darshan Gaikwad",                              "14-Aug-20","0 to 30"],
+					["16188",                              "Mayur Rathod",                              "Darshan Gaikwad",                              "14-Aug-20","0 to 30"],
+					["16193",                              "Alfiya",                              "Darshan Gaikwad",                              "14-Aug-20","0 to 30"],
+					["16371",                              "Sidhesh Vijay Jantre",                              "Darshan Kale",                              "24-Aug-20","0 to 30"],
+					["16373",                              "Manojkumar Anil Patil",                              "Rohit Hari Patil",                              "24-Aug-20","0 to 30"],
+					["16381",                              "Hitesh Sanjay  Badekar",                              "Darshan Gaikwad",                              "24-Aug-20","0 to 30"],
+					["16394",                              "Priyanka Ranganna Nanki",                              "Rohit Hari Patil",                              "24-Aug-20","0 to 30"],
+					["16395",                              "Jayshari",                              "Ranganna Nanki	Darshan Kale",                              "24-Aug-20","0 to 30"],
+					["16398",                              "Sumit Prakash Ghodke",                              "Darshan Gaikwad",                              "24-Aug-20","0 to 30"],
+					["16274",                              "Marry Gollar",                              "Rohit Hari Patil",                              "24-Aug-20","0 to 30"],
+					["16278",                              "Monu Tiwari",                              "Rohit Hari Patil",                              "24-Aug-20","0 to 30"],
+					["16284",                              "Shubham Sunil Mudshinge",                              "Rohit Hari Patil",                              "24-Aug-20","0 to 30"],
+					["15037",                              "Rajeshwar Yaswant Rathod",                              "Rohit Hari Patil",                              "21-Jan-20","0 to 30"],
+					["15464",                              "Prajakta Kamble",                              "Darshan Gaikwad",                              "28-Feb-20","0 to 30"],
+					["13698",                              "Manish Kumar Singh",                              "Darshan Gaikwad",                              "5-Sep-20","0 to 30"],
+					["16459",                              "Pankaj Singh Narayan Singh Rawat",                              "Darshan Kale",                              "5-Sep-20","0 to 30"],
+					["16474",                              "Aarti Vijay Katakdhond",                              "Darshan Kale",                              "5-Sep-20","0 to 30"],
+					["16476",                              "Priyanka Vilas Chavan",                              "Darshan Kale",                              "5-Sep-20","0 to 30"],
+					["16477",                              "Pranay Santosh Chavan",                              "Rohit Hari Patil",                              "5-Sep-20","0 to 30"],
+					["15286",                              "Ahmadi Muhammad Ibrahim Sardar",                              "Rohit Hari Patil",                              "17-Feb-20","0 to 30"],
+					["15417",                              "Aanandi Nanasaheb Kawade",                              "Rohit Hari Patil",                              "24-Feb-20","0 to 30"],
+					["16489",                              "Pushpanjali Shankar Prasad Jaiswar",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16490",                              "Aniket Arun More",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16491",                              "Ankita Waydande",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16496",                              "Priyanka Patil",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16498",                              "Seema Gherade",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16499",                              "Hussain Tubati",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16500",                              "Chetna Agrawal",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16501",                              "Chetan Chandrashekar Shahasane",                              "Prajyot Prakash Pawar",				"8-Sep-20","0 to 30"],
+					["16506",                              "Joshna Mhatre",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16509",                              "Sukhwinder Singh",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16510",                              "Arzaqa Naseem Shaikh",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16511",                              "Damanpreet Kaur Saini",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16515",                              "Seema Helkar",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16516",                              "Khizar Mohsin Khan",                              "Prajyot Prakash Pawar",					"8-Sep-20","0 to 30"],
+					["16517",                              "Vaishali Balasaheb Akolkar",                              "Prajyot Prakash Pawar",					"8-Sep-20","0 to 30"],
+					["16518",                              "Valencia Veigas",					"Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["16519",                              "Lakshmi Shah",                              "Prajyot Prakash Pawar",                              "8-Sep-20","0 to 30"],
+					["15391",                              "Patil Sachin Sadashiv",                              "Darshan Kale",                              "25-Feb-20","0 to 30"],
+					["15476",                              "Mahima Ramteke",                              "Darshan Gaikwad",                              "28-Feb-20","0 to 30"],
+					["15446",                              "Vinita Ananta Koli",                              "Darshan Gaikwad",                              "28-Feb-20","0 to 30"],
+					["16543",                              "Smitarani Jadhav",                              "Rohit Hari Patil",                              "15-Sep-20","0 to 30"],
+					["16554",                              "Mahabir Saha",                              "Anas Ansari",                              "15-Sep-20","0 to 30"],
+					["16525",                              "Sonali Misal",                              "Darshan Kale",                              "15-Sep-20","0 to 30"],
+					["16535",                              "Shaikh Hussain Mohammed Siddiq",                              "Anas Ansari",                              "15-Sep-20","0 to 30"],
+					["16537",                              "Rukhsar Altaf Shaikh",                              "Anas Ansari",                              "15-Sep-20","0 to 30"],
+					["16539",                              "Mohammad Sameerudin",                              "Rohit Hari Patil",                              "15-Sep-20","0 to 30"],
+					["16540",                              "Zainab Yusuf Shaikh",                              "Anas Ansari",                              "15-Sep-20","0 to 30"],
+					["16544",                              "Manmohan Singh",                              "Anas Ansari",                              "15-Sep-20","0 to 30"],
+					["16552",                              "Sanjeet Ghadai",                              "Anas Ansari",                              "15-Sep-20","0 to 30"],
+					["15079",                              "Nitim Uday Shetty",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16570",                              "Kajal Gulab Sharma",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16573",                              "Noor Bano Samiullah Shah",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16578",                              "Aarti Gaikwad",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16580",                              "Pooja Shinde",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16587",                              "Akshay Jaiswal",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16588",                              "Rinku Bhalerao",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16593",                              "Madhura Nitin Kumbhar",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16594",                              "Nikhil Bodkhe",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16596",                              "Joeimini Goswani",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16597",                              "Adil",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16600",                              "Ritik Parihar",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16601",                              "Gaybrel Rajkumar Ranoji",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16602",                              "Pratik Raul",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16603",                              "Pooja Raju Thorat",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16604",                              "Ganesh Tuplonde",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["16460",                              "Gauri Ajit Shirke",                              "Anas Ansari",                              "17-Sep-20","0 to 30"],
+					["15458",                              "Nilesh Mohan Nair",                              "Anas Ansari",                              "22-Sep-20","0 to 30"],
+					["16615",                              "Lakhvindar Naresh Siddhu",                              "Anas Ansari",                              "22-Sep-20","0 to 30"],
+					["16619",                              "Sahil Salunkhe",                              "Anas Ansari",                              "22-Sep-20","0 to 30"],
+					["16620",                              "Mayuresh",                              "Prakash Patil",                              "Anas Ansari	22-Sep-20","0 to 30"],
+					["16621",                              "Nilam Hemant Sonar",                              "Anas Ansari",                              "22-Sep-20","0 to 30"],
+					["16627",                              "Sneha Satpute",                              "Anas Ansari",                              "22-Sep-20","0 to 30"],
+					["16633",                              "Rajesh Surendra Sharma",                              "Anas Ansari",                              "22-Sep-20","0 to 30"],
+					["16641",                              "Shubham Chaturvedi",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16643",                              "Abhijeet Ashok Narale",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16644",                              "Shaikh Ateeque Ahmed",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16647",                              "Rohini Nikalje",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16652",                              "Vikas Mishra",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16654",                              "Akash Jagtap",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16659",                              "Pooja Koli",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16662",                              "Ashwin Ashok Joshi",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16666",                              "Akanksha Meshram",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16667",                              "Shivangi Hiranwar",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16669",                              "Jagruti Pervi",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16671",                              "Abhinav Shinde",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16672",                              "Omkar Mahesh Padhe",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16673",                              "Kuldeep Singh",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16674",                              "Mitali Mandar Sonawane",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16675",                              "Rasika Shinde",                              "Anas Ansari",                              "29-Sep-20","0 to 30"],
+					["16676",                              "Anjali Ambikaprasad Yadav",                              "Anas Ansari",                              "29-Sep-20"]
+				];
+									
+									
+				agentOp = ``;
+				for (let i =0; i<emp.length;i++){
+					agentOp += `<option value="${emp[i]}" >${emp[i][1]}</option>`;
+				}
+				document.getElementById("Agents").innerHTML=agentOp;		
+				
+				
+				
+				dispoList = ["AlreadyHaveInsurance",
+								"Already Have Insurance",
+								"Call Back",
+								"Hungup During Presentation",
+								"Not Interested",
+								"Sent to Verification"];
+				
+				
+				dispoOp = ``;
+				for (let i =0; i<dispoList.length;i++){
+				
+					dispoOp += `<option value="${dispoList[i]}" >${dispoList[i]}</option>`;
+				}
+				document.getElementById("Disposition").innerHTML = dispoOp;		
+				
+				
+				
+				
+				
+		</script>
+		
+		
+		<script>
+		observe= [	"Opening given",
+					"Right party confirmed",
+					"informed purpose of call",
+					"IRDA statement informed",
+					"Plan benefit explained",  
+					"explain importance of health policy", 
+					"Call disconnected by customer"
+
+					];
+		
+		obs = `<div class="card-header">Observations</div>`;
+		for (let i =0; i<observe.length;i++){
+				
+				obs += `<div class="form-check"><input type="checkbox" name="observ" id="${observe[i]}" onclick="observation();" value="${observe[i]}"class="form-check-input" checked><label for="${observe[i]}" class="form-check-label form-check-label-sm" > ${observe[i]}</label></div>`
+				}
+		document.getElementById("card-Observation").innerHTML=obs;	
+		
+		areaOI= [	"Opening given1",
+					"Right party confirmed1",
+					"informed purpose of call1",
+					"IRDA statement informed1",
+					"Plan benefit explained1",  
+					"explain importance of health policy1", 
+					"Call disconnected by customer1"
+
+					];
+		
+		aoi = `<div class="card-header">Area Of Improvement</div>`;
+		for (let i =0; i<observe.length;i++){
+		
+			aoi += `<div class="form-check"><input type="checkbox" name="aoi" id="${areaOI[i]}" onclick="AreaOfImprove();" value="${areaOI[i]}"class="form-check-input" ><label for="${areaOI[i]}" class="form-check-label form-check-label-sm"> ${areaOI[i]}</label></div>`
+		}
+		document.getElementById("card-AreaOI").innerHTML=aoi;
+		
+		</script>
+		<script>
+		function displayrow(list,rowID){
+			roww = ``
+			for( let i =0; i<list.length;i++){
+			
+				roww += `<td id="${i}">${list[i]}</td>`
+				
+			}
+			document.getElementById(rowID).innerHTML = roww;
+	
+		}
+		</script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="{{ url_for('static',filename='assets/js/vendor/jquery.slim.min.js') }}"><\/script>')</script><script src="{{ url_for('static',filename='assets/dist/js/bootstrap.bundle.min.js') }}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+	<script src="{{ url_for('static',filename='js/dashboard.js') }}"></script></body>
+	
+	</body>
+</html>
