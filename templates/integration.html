@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="-1" />
  
     <title>Dashboard</title>
 
@@ -121,9 +124,6 @@
 					</div>
 					<div class="card-body">
 						<div class="form-group mb-3">
-							<input type="search"class="form-control form-control-sm" placeholder ="Agent Name"  id="agentSearchBox" required>
-						</div>
-						<div class="form-group mb-3">
 							<select class="form-control form-control-sm" id="Agents" required>
 
 							</select>
@@ -144,13 +144,13 @@
 								<input class="form-control form-control-sm" id="duration" type="text" placeholder="Call Duration">
 							</div>
 						</div>
-						<div class="form-group mb-3">
-							<input type="search"class="form-control form-control-sm" placeholder ="Disposition"  id="dispoSearchBox" required>
-						</div>
-						<div class="form-group mb-3">
-							<select class="form-control form-control-sm" id="Disposition" required>
-
-							</select>
+						<div class="row mb-3">
+							<div class="col">
+								<select class="form-control form-control-sm" id="Disposition" required></select>
+							</div>
+							<div class="col">
+								<select class="form-control form-control-sm" id="subDispo" required></select>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -162,16 +162,14 @@
 						<label class="form-check-label" for="customSelectAll">Select All</label>
 					</div>
 					<div class="row">
-						<div class="col" id="parameters" style="height: 325px; overflow-y: scroll;">
-							
+						<div class="col-12 col-md-4">
+							<div class="col" id="parameters" style="height: 370px; overflow-y: scroll;"></div>
 						</div>
-						<div class="col" >
-							<div class="card" id="card-Observation"style="height: 325px; overflow-y: scroll;"><div class="card-header">Observations</div>
-							</div>
-						</div>
-						<div class="col" >
-							<div class="card" id="card-AreaOI" style="height: 325px; overflow-y: scroll;overflow-x: scroll;"><div class="card-header">Area Of Improvement </div>
-							</div>
+						<div class="col-12 col-md-4"><div class="card-header">Observations</div>
+							<div class="col" id="card-Observation"style="height: 325px; overflow-y: scroll;"></div>
+						</div>						
+						<div class="col-12 col-md-4"><div class="card-header">Area Of Improvement</div>
+							<div class="col" id="card-AreaOI" style="height: 325px; overflow-y: scroll;"></div>
 						</div>
 					</div>
 				</div>
@@ -191,12 +189,12 @@
 						</div>
 					
 			<div class="form-row">
-				<div class="col">
-					<div class="card-header"><button type="button" class="btn btn-outline-dark btn-sm" >Observation</button></div>
+				<div class="col-12 col-md-6">
+					<div class="card-header"><button type="button" onclick="displayRow()" class="btn btn-outline-dark btn-sm" >Observation</button></div>
 					<textarea class="form-control" rows="4" cols="200" id="OBStarget"></textarea>
 				</div>
-				<div class="col">
-					<div class="card-header"><button type="button" class="btn btn-outline-dark btn-sm" >AOI</button></div>
+				<div class="col-12 col-md-6">
+					<div class="card-header"><button type="button" onclick="displayRow()" class="btn btn-outline-dark btn-sm" >AOI</button></div>
 					<textarea class="form-control" rows="4" cols="200" id="AOItarget"></textarea>
 				</div>
 			</div>
@@ -226,9 +224,9 @@
 		  request.addEventListener("load", function (e) {
 
 			if (request.status == 200) {
-				var res = request.response;
+				var res = request.response.dataRow;
 				console.log(res);
-				displayrow(res.dataRow,"copyrow");
+				displayrow(res,"copyrow1");
 				
 			}
 			else {
@@ -246,9 +244,53 @@
 		}
 		
 		function reset(){
-			
 			location.reload(true);
 		
+		}
+		
+		function displayRow(){
+			
+			var selects = document.getElementsByName('para');
+			var vals =[]
+			for (var i=0, n=selects.length;i<n;i++) {vals.push(parseInt(selects[i].value));}
+			
+			today= new Date().getDate();
+			
+			emp = document.getElementById("Agents").value.split(",");
+			contact = document.getElementById("contactNO").value.split(",");
+			duration = document.getElementById("duration").value;
+			auditor = "shashi";
+			disposition = document.getElementById("Disposition").value;
+			subDispo = document.getElementById("subDispo").value;
+			week ="";
+			if (today>0 && today<8){week = "Week 1"}
+			if (today>7 && today<15){week = "Week 2"}
+			if (today>14 && today<22){week = "Week 3"}
+			if (today>21 && today<29){week = "Week 4"}
+			if (today>28 && today<32){week = "Week 5"}
+			
+			obs = document.getElementById("OBStarget").value;
+			aoi = document.getElementById("AOItarget").value;
+			if (contact == "" || duration == "" || obs == "" || aoi == "" ) {
+				
+			}
+			else{
+				list =[];
+				list = list.concat(emp);
+				list = list.concat(contact);
+				list = list.concat(duration);
+				list = list.concat(auditor);
+				list = list.concat(disposition);
+				list = list.concat(subDispo);
+				list = list.concat(week);
+				
+				list = list.concat(vals);
+				list.push(obs);
+				list.push(aoi);
+				
+				console.log(list);
+				displayrow(list,"copyrow");
+			}
 		}
 		
 		function showROW(){
@@ -265,6 +307,7 @@
 			duration = document.getElementById("duration").value;
 			auditor = "shashi";
 			disposition = document.getElementById("Disposition").value;
+			subDispo = document.getElementById("subDispo").value;
 			week ="";
 			if (today>0 && today<8){week = "Week 1"}
 			if (today>7 && today<15){week = "Week 2"}
@@ -276,91 +319,25 @@
 			aoi = document.getElementById("AOItarget").value;
 			if (contact == "" || duration == "" || obs == "" || aoi == "" ) {
 				alert("check parameters properly");
-				reset();
 			}
 			else{
-				list =[];
-				list = list.concat(emp);
-				list = list.concat(contact);
-				list = list.concat(duration);
-				list = list.concat(auditor);
-				list = list.concat(disposition);
-				list = list.concat(disposition);
-				list = list.concat(week);
-				
-				list = list.concat(vals);
-				list.push(obs);
-				list.push(aoi);
-				
 				list1 =[];
 				list1 = list1.concat(emp);
 				list1 = list1.concat(contact);
 				list1 = list1.concat(duration);
 				list1 = list1.concat(auditor);
 				list1 = list1.concat(disposition);
-				list1 = list1.concat(disposition);
+				list1 = list1.concat(subDispo);
 				list1 = list1.concat(week);
 				
-			
-				
-				console.log(list);
-				displayrow(list,"copyrow");
-				var url= "/addRow";
-				console.log(vals);
-				AddRow(list1,vals,obs,aoi,url);
+				AddRow(list1,vals,obs,aoi,"/addRow");
 				
 				
 			}
 		}
 		</script>
 		<script>
-		//search for agents details
-		agentSearchBox = document.querySelector("#agentSearchBox");
-		Agents = document.querySelector("#Agents");
-		var when = "keyup"; //You can change this to keydown, keypress or change
-
-		agentSearchBox.addEventListener("keyup", function (e) {
-			var text = e.target.value; 
-			var options = Agents.options; 
-			for (var i = 0; i < options.length; i++) {
-				var option = options[i]; 
-				var optionText = option.text; 
-				var lowerOptionText = optionText.toLowerCase();
-				var lowerText = text.toLowerCase(); 
-				var regex = new RegExp("^" + text, "i");
-				var match = optionText.match(regex); 
-				var contains = lowerOptionText.indexOf(lowerText) != -1;
-				if (match || contains) {
-					option.selected = true;
-					return;
-				}
-				agentSearchBox.selectedIndex = 0;
-			}
-		});
-
-		//search for disposition details
-		dispoSearchBox = document.querySelector("#dispoSearchBox");
-		dispo = document.querySelector("#Disposition");
-		var when = "keyup"; //You can change this to keydown, keypress or change
-
-		dispoSearchBox.addEventListener("keyup", function (e) {
-			var text = e.target.value; 
-			var options = dispo.options; 
-			for (var i = 0; i < options.length; i++) {
-				var option = options[i]; 
-				var optionText = option.text; 
-				var lowerOptionText = optionText.toLowerCase();
-				var lowerText = text.toLowerCase(); 
-				var regex = new RegExp("^" + text, "i");
-				var match = optionText.match(regex); 
-				var contains = lowerOptionText.indexOf(lowerText) != -1;
-				if (match || contains) {
-					option.selected = true;
-					return;
-				}
-				dispoSearchBox.selectedIndex = 0;
-			}
-		});
+		
 		</script>
 		<script>
 			function observation(){
@@ -478,7 +455,7 @@
 				
 					<tr>
 						<td>
-							<select class="form-group form-group-sm" onchange="paraList();" name="para" id="${para[i][2]}">
+							<select class="form-group form-group-sm" onchange="displayRow();" name="para" id="${para[i][2]}">
 							  <option value="${para[i][1]}">${para[i][1]}</option>
 							  <option value="0">0</option>
 							  <option value="na">NA</option>
@@ -633,16 +610,25 @@
 								"Hungup During Presentation",
 								"Not Interested",
 								"Sent to Verification"];
-				
+								
+				subDispoList = ["AlreadyHaveInsurance",
+								"Already Have Insurance",
+								"Call Back",
+								"Hungup During Presentation",
+								"Not Interested",
+								"Sent to Verification"];
 				
 				dispoOp = ``;
 				for (let i =0; i<dispoList.length;i++){
-				
 					dispoOp += `<option value="${dispoList[i]}" >${dispoList[i]}</option>`;
 				}
 				document.getElementById("Disposition").innerHTML = dispoOp;		
 				
-				
+				subDispo = ``;
+				for (let i =0; i<subDispoList.length;i++){
+					subDispo += `<option value="${subDispoList[i]}" >${subDispoList[i]}</option>`;
+				}
+				document.getElementById("subDispo").innerHTML = subDispo;
 				
 				
 				
@@ -652,36 +638,105 @@
 		<script>
 		observe= [	"Opening given",
 					"Right party confirmed",
+					"language preference confirmed",
 					"informed purpose of call",
+					" Appreciate for maintaining good track record,Seek permission",
+					"asked already have policy",
+					"Seek permission",
 					"IRDA statement informed",
-					"Plan benefit explained",  
-					"explain importance of health policy", 
-					"Call disconnected by customer"
+					"Network issue",
+					" Plan benefit explained",
+					" explain importance of health policy",
+					" EMI amount informed",
+					" Upfront cancellation suggested",
+					" exclusions and waiting period informed",
+					" Policy activation procedure informed",
+					" CSE asked agreed to pay the premium",
+					" CSE tried to convinced customer",
+					" CSE suggested individual plan",
+					" customer asked for premium",
+					" address confirmed",
+					"  marital status confirmed",
+					" Family details and age confirmed",
+					" Health declaration confirmed",
+					" nominee details confirmed",
+					" customer asked for callback",
+					" Customer need time to think",
+					" Customer not interested",
+					" callback time confirmed",
+					" callback time confirmed",
+					" call closing done"
 
 					];
 		
-		obs = `<div class="card-header">Observations</div>`;
+		obs = `<table class="table table-responsive table-hover table-sm">`;
 		for (let i =0; i<observe.length;i++){
 				
-				obs += `<div class="form-check"><input type="checkbox" name="observ" id="${observe[i]}" onclick="observation();" value="${observe[i]}"class="form-check-input" checked><label for="${observe[i]}" class="form-check-label form-check-label-sm" > ${observe[i]}</label></div>`
+				obs += `	
+						<tr>
+						<td>
+							<label for="${observe[i]}" class="form-check-label form-check-label-sm" >
+							<input type="checkbox" name="observ" id="${observe[i]}" onclick="observation();" value="${observe[i]}"class="form-check-input" checked>
+							 ${observe[i]}</label>
+						</td>
+						</tr>
+						`
 				}
+				obs += `</table>`
 		document.getElementById("card-Observation").innerHTML=obs;	
 		
-		areaOI= [	"Opening given1",
-					"Right party confirmed1",
-					"informed purpose of call1",
-					"IRDA statement informed1",
-					"Plan benefit explained1",  
-					"explain importance of health policy1", 
-					"Call disconnected by customer1"
+		areaOI= [	"Need to give opening on every call",	
+					"Right party not confirmed",	
+					"Language preference confirmed",	
+					"Not Informed purpose of call",	
+					" Appreciatation not done for maintaining good track record",	
+					"Asked already have policy",	
+					"Need to create interest and urgency", 		
+					"IRDA statement not informed",	
+					"Casual tone observed",  	
+					" Plan benefit  not explained",	
+					" Importance of health policynot expanded",				
+					" EMI amount not informed",
+					" Upfront cancellation suggested",
+					" Exclusions and waiting period not informed",
+					" CSE did not asked agreed to pay the premium",			
+					" CSE did not tried to convinced customer", 	
+					" Need to work on plan presentation", 		
+					" Address not confirmed",	
+					" Marital status not confirmed",  	
+					" Family details and age not confirmed",	
+					" Health declaration not confirmed",				
+					" Nominee details not confirmed ",
+					" Call closing not done",
+					" Need to confirm callback time",
+					" Need to use trial closing statement",
+					" Lack of confidence",
+					" Need to suggest floater plan",
+					" Need to be clear on call",
+					" Upfront assume customer family member age",
+					" No need to suggest adds children in next policy year",
+					" Need to avoid booking statement",
+					" CSE using mute while customer speaking",
+					" Agent hang-up call",  
+					" Need to pitch 3 lakh sum insured",
+					" Need to pitch 5 lakh sum insured",
+					" Need to pitch 10 lakh sum insured",
+					" Given false Promises",
 
 					];
 		
-		aoi = `<div class="card-header">Area Of Improvement</div>`;
-		for (let i =0; i<observe.length;i++){
+		aoi = `<table class="table table-responsive table-hover table-sm">`;
+		for (let i =0; i<areaOI.length;i++){
 		
-			aoi += `<div class="form-check"><input type="checkbox" name="aoi" id="${areaOI[i]}" onclick="AreaOfImprove();" value="${areaOI[i]}"class="form-check-input" ><label for="${areaOI[i]}" class="form-check-label form-check-label-sm"> ${areaOI[i]}</label></div>`
+			aoi += `
+			<tr>
+			<td>
+				<input type="checkbox" name="aoi" id="${areaOI[i]}" onclick="AreaOfImprove();" value="${areaOI[i]}"class="form-check-input" >
+				<label for="${areaOI[i]}" class="form-check-label form-check-label-sm"> ${areaOI[i]}</label>
+			</td>
+			</tr>`
 		}
+		aoi += `</table>`
 		document.getElementById("card-AreaOI").innerHTML=aoi;
 		
 		</script>
@@ -689,9 +744,7 @@
 		function displayrow(list,rowID){
 			roww = ``
 			for( let i =0; i<list.length;i++){
-			
 				roww += `<td id="${i}">${list[i]}</td>`
-				
 			}
 			document.getElementById(rowID).innerHTML = roww;
 	
