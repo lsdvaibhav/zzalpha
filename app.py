@@ -1,5 +1,6 @@
 from flask import Flask,render_template,request,jsonify,make_response,send_file
 import response
+import numpy
 import pandas as pd
 #-----flask app code-----------
 app = Flask(__name__)
@@ -32,12 +33,19 @@ def reports():
 #----routing Week data and response week data--------------------------------
 @app.route('/weekData' , methods=['POST','GET'])
 def weekData():
-    week = request.form['week']
-    # df = pd.read_excel("Quality Sheet.xlsx",sheet_name="Sheet1",header=0,keep_default_na=True,index_col=False)
-    # df = df[df['Week']==week]
+    week = request.form['week']   
+    df = pd.read_excel("Quality Sheet.xlsx",sheet_name="Sheet1",header=0,keep_default_na=True,index_col=False)
+    df = df[df['Week']==week]
+    count = df.groupby('Audit Date')['Associate Code'].nunique()
+    dates = df["Audit Date"].unique()
+    count1 = []
+    for val in count:
+        count1.append(val)
+    datesList= []
+    for date in dates:
+        datesList.append(numpy.datetime_as_string(date, unit='D'))
     
-    # print(df)    
-    res = make_response(jsonify({ "datares" : [60,23,34,45,50,50,50]}),200)
+    res = make_response(jsonify({ "datares" : count1,"label" : datesList,"TableData" : df.to_html(index = False,classes="table table-hover table-hover-sm ",justify ='left')}),200)
     return res
 
 #----routing Add Row and response added row--------------------------------
